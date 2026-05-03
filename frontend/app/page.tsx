@@ -6,6 +6,7 @@ import TelegramIcon from "./components/icons/TelegramIcon"
 import LolzIcon from "./components/icons/LolzIcon"
 import WhatIBuild from "./sections/WhatIBuild"
 import MyStack from "./sections/MyStack"
+import Portfolio from "./sections/Portfolio"
 
 const socialNetworks: socialNetwork[] = [
 	{
@@ -36,6 +37,7 @@ export default function Home() {
 					<Hero socialNetworks={socialNetworks} />
 					<WhatIBuild />
 					<MyStack />
+					<Portfolio />
 				</main>
 			</body>
 		</html>
