@@ -8,25 +8,26 @@ import WhatIBuild from "./sections/WhatIBuild"
 import MyStack from "./sections/MyStack"
 import Portfolio from "./sections/Portfolio"
 import Order from "./sections/Order"
+import Footer from "./sections/Footer"
 
 const socialNetworks: socialNetwork[] = [
 	{
 		id: 1,
 		title: "Telegram",
 		link: "https://t.me/Anybes3",
-		icon: <TelegramIcon className="size-4" />,
+		icon: <TelegramIcon className="cursor-pointer" />,
 	},
 	{
 		id: 2,
 		title: "GitHub",
 		link: "https://github.com/Frolov3",
-		icon: <GitHubIcon className="size-4" />,
+		icon: <GitHubIcon className="cursor-pointer" />,
 	},
 	{
 		id: 3,
 		title: "Lolz",
 		link: "https://lolz.live/members/1018972/",
-		icon: <LolzIcon className="size-4" />,
+		icon: <LolzIcon className="cursor-pointer" />,
 	},
 ]
 
@@ -41,6 +42,7 @@ export default function Home() {
 					<Portfolio />
 					<Order />
 				</main>
+				<Footer socialNetworks={socialNetworks} />
 			</body>
 		</html>
 	)
