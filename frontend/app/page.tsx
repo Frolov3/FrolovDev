@@ -7,6 +7,7 @@ import LolzIcon from "./components/icons/LolzIcon"
 import WhatIBuild from "./sections/WhatIBuild"
 import MyStack from "./sections/MyStack"
 import Portfolio from "./sections/Portfolio"
+import Order from "./sections/Order"
 
 const socialNetworks: socialNetwork[] = [
 	{
@@ -38,6 +39,7 @@ export default function Home() {
 					<WhatIBuild />
 					<MyStack />
 					<Portfolio />
+					<Order />
 				</main>
 			</body>
 		</html>
