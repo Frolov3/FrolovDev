@@ -4,6 +4,7 @@ import GitHubIcon from "./components/icons/GitHubIcon"
 import type socialNetwork from "./types/socialNetwork"
 import TelegramIcon from "./components/icons/TelegramIcon"
 import LolzIcon from "./components/icons/LolzIcon"
+import WhatIBuild from "./sections/WhatIBuild"
 
 const socialNetworks: socialNetwork[] = [
 	{
@@ -32,6 +33,7 @@ export default function Home() {
 			<body>
 				<main>
 					<Hero socialNetworks={socialNetworks} />
+					<WhatIBuild />
 				</main>
 			</body>
 		</html>
