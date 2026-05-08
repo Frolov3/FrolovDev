@@ -16,3 +16,6 @@ npm-debug.log*
 
 # typescript
 *.tsbuildinfo
+
+# Prisma orm
+/generated/prisma

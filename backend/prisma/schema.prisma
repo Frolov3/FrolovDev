@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Budget {
+  id Int @id @default(autoincrement())
+  title String @unique
+  orders Order[]
+}
+
+model Urgency {
+  id Int @id @default(autoincrement())
+  title String @unique
+  orders Order[]
+}
+
+model ProjectType {
+  id Int @id @default(autoincrement())
+  title String @unique
+  orders Order[]
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+  projectType ProjectType @relation(fields: [projectTypeId], references: [id])
+  projectTypeId Int
+  contact String
+  task String? @db.Text
+  budget Budget @relation(fields: [budgetId], references: [id])
+  budgetId Int
+  urgency Urgency @relation(fields: [urgencyId], references: [id])
+  urgencyId Int
+  files OrderFile[]
+  ip String?
+  userAgent String?
+  referer String?
+  createdAt DateTime @default(now())
+}
+
+model OrderFile {
+  id Int @id @default(autoincrement())
+  path String
+  order Order @relation(fields: [orderId], references: [id]) 
+  orderId Int
+}
