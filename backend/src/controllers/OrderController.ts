@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import orderService from "../services/order.service"
 import type CreateOrderDto from "../types/CreateOrderDto"
+import sendTelegram from "../utils/sendTelegram"
 
 type OrderRequestBody = Omit<
 	CreateOrderDto,
@@ -41,6 +42,8 @@ class OrderController {
 			}
 
 			const order = await orderService.create(data)
+
+			await sendTelegram(order)
 
 			return res.json({ success: true })
 		} catch (error) {
