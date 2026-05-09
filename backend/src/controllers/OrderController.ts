@@ -2,7 +2,10 @@ import { Request, Response } from "express"
 import orderService from "../services/order.service"
 import type CreateOrderDto from "../types/CreateOrderDto"
 
-type OrderRequestBody = Omit<CreateOrderDto, "projectTypeId" | "budgetId" | "urgencyId" | "files"> & {
+type OrderRequestBody = Omit<
+	CreateOrderDto,
+	"projectTypeId" | "budgetId" | "urgencyId" | "files"
+> & {
 	projectTypeId: number | string
 	budgetId: number | string
 	urgencyId: number | string
@@ -39,7 +42,7 @@ class OrderController {
 
 			const order = await orderService.create(data)
 
-			return res.json({ order: order, success: true })
+			return res.json({ success: true })
 		} catch (error) {
 			return res
 				.status(500)
