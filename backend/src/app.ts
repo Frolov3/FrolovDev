@@ -1,6 +1,7 @@
 import { fileURLToPath } from "node:url"
 import express, { Request, Response, NextFunction } from "express"
 import multer from "multer"
+import cors from "cors"
 import { UnsupportedFileTypeError } from "./middleware/uploadFiles"
 import router from "./routes"
 import logger from "./utils/logger"
@@ -8,6 +9,12 @@ import logger from "./utils/logger"
 const app = express()
 const uploadsPath = fileURLToPath(new URL("../uploads", import.meta.url))
 
+const allowedDomain = process.env.ALLOWED_DOMAIN
+app.use(
+	cors({
+		origin: allowedDomain || false,
+	}),
+)
 app.use((req, res, next) => {
 	const start = Date.now()
 
