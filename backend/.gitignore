@@ -22,3 +22,8 @@ npm-debug.log*
 
 # Upload files
 /uploads/*
+
+# Logs
+/logs/*
+!/logs/
+!/logs/.gitkeep

@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import orderService from "../services/order.service"
 import type CreateOrderDto from "../types/CreateOrderDto"
 import sendTelegram from "../utils/sendTelegram"
+import logger from "../utils/logger"
 
 type OrderRequestBody = Omit<
 	CreateOrderDto,
@@ -16,6 +17,7 @@ type OrderRequestBody = Omit<
 class OrderController {
 	async create(req: Request<{}, {}, OrderRequestBody>, res: Response) {
 		try {
+			logger.info({ headers: req.headers, reqBody: req.body })
 			const files = req.files
 			const uploadedFiles = Array.isArray(files)
 				? files.map((file) => `/uploads/${file.filename}`)
@@ -43,10 +45,22 @@ class OrderController {
 
 			const order = await orderService.create(data)
 
+			logger.info({ order: order })
+
 			await sendTelegram(order)
 
 			return res.json({ success: true })
 		} catch (error) {
+			const err =
+				error instanceof Error ? error : new Error(String(error))
+
+			logger.error({
+				err: {
+					message: err.message,
+					stack: err.stack,
+				},
+			})
+
 			return res
 				.status(500)
 				.json({ message: "Error create order", success: false })
