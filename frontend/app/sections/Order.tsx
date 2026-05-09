@@ -2,18 +2,31 @@ import ArrowIcon from "../components/icons/ArrowIcon"
 import NumberSection from "../components/NumberSection"
 import SectionTitle from "../components/SectionTitle"
 
-const projectTypes = [
-	"Веб - сервис",
-	"Telegram Bot",
-	"Автоматизация",
-	"Парсер",
-	"Лендинг",
-	"Другое",
-]
-const budget = ["До 3 000", "3 000 - 10 000", "10 000 - 30 000", "30 000 +"]
-const deadlines = ["Срочно (1-3 дня)", "Стандарт (1-2 нед)", "Не важно"]
+async function fetchBudget() {
+	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/budget`)
 
-export default function Order() {
+	return res.json()
+}
+
+async function fetchProjectTypes() {
+	const res = await fetch(
+		`${process.env.NEXT_PUBLIC_API_URL}/api/project-type`,
+	)
+
+	return res.json()
+}
+
+async function fetchDeadlines() {
+	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/urgency`)
+
+	return res.json()
+}
+
+export default async function Order() {
+	const budgets = await fetchBudget()
+	const projectTypes = await fetchProjectTypes()
+	const deadlines = await fetchDeadlines()
+
 	return (
 		<div className="h-screen bg-[var(--black)] px-24 pt-8 flex flex-col">
 			<div className="flex justify-between">
@@ -29,19 +42,29 @@ export default function Order() {
 						Тип проекта
 					</div>
 					<div className="flex gap-4">
-						{projectTypes.map((option) => (
-							<label key={option} className="cursor-pointer">
-								<input
-									type="radio"
-									name="type"
-									value={option}
-									className="hidden peer"
-								/>
-								<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
-									{option}
-								</div>
-							</label>
-						))}
+						{projectTypes.projectTypes
+							?.sort(
+								(
+									a: { id: number; title: string },
+									b: { id: number; title: string },
+								) => a.id - b.id,
+							)
+							.map((option: { id: number; title: string }) => (
+								<label
+									key={option.id}
+									className="cursor-pointer"
+								>
+									<input
+										type="radio"
+										name="type"
+										value={option.id}
+										className="hidden peer"
+									/>
+									<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
+										{option.title}
+									</div>
+								</label>
+							))}
 					</div>
 				</div>
 				<input
@@ -62,19 +85,29 @@ export default function Order() {
 						Бюджет
 					</div>
 					<div className="flex gap-4">
-						{budget.map((option) => (
-							<label key={option} className="cursor-pointer">
-								<input
-									type="radio"
-									name="budget"
-									value={option}
-									className="hidden peer"
-								/>
-								<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
-									{option}
-								</div>
-							</label>
-						))}
+						{budgets.budgets
+							?.sort(
+								(
+									a: { id: number; title: string },
+									b: { id: number; title: string },
+								) => a.id - b.id,
+							)
+							.map((option: { id: number; title: string }) => (
+								<label
+									key={option.id}
+									className="cursor-pointer"
+								>
+									<input
+										type="radio"
+										name="budget"
+										value={option.id}
+										className="hidden peer"
+									/>
+									<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
+										{option.title}
+									</div>
+								</label>
+							))}
 					</div>
 				</div>
 				<div className="mt-12">
@@ -82,19 +115,29 @@ export default function Order() {
 						Срочность
 					</div>
 					<div className="flex gap-4">
-						{deadlines.map((option) => (
-							<label key={option} className="cursor-pointer">
-								<input
-									type="radio"
-									name="deadlines"
-									value={option}
-									className="hidden peer"
-								/>
-								<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
-									{option}
-								</div>
-							</label>
-						))}
+						{deadlines.urgencies
+							?.sort(
+								(
+									a: { id: number; title: string },
+									b: { id: number; title: string },
+								) => a.id - b.id,
+							)
+							.map((option: { id: number; title: string }) => (
+								<label
+									key={option.id}
+									className="cursor-pointer"
+								>
+									<input
+										type="radio"
+										name="deadlines"
+										value={option.id}
+										className="hidden peer"
+									/>
+									<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
+										{option.title}
+									</div>
+								</label>
+							))}
 					</div>
 				</div>
 				<button className="bg-[var(--white)] border border-2 border-[var(--white)] flex items-center gap-3 p-3 w-1/3 mt-10 cursor-pointer group outline-none focus:bg-transparent hover:bg-transparent duration-300">
