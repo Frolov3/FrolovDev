@@ -20,6 +20,25 @@ type NoticeProps = {
 	onExited: () => void
 }
 
+type AttachedFile = {
+	id: string
+	file: File
+	url: string
+}
+
+const MAX_FILES = 10
+const MAX_FILE_SIZE = 25 * 1024 * 1024
+const ACCEPTED_FILE_TYPES =
+	".jpg,.jpeg,.png,.webp,.pdf,.zip,.fig,.txt,.md,.doc,.docx"
+
+function formatFileSize(size: number) {
+	if (size < 1024 * 1024) {
+		return `${Math.max(1, Math.round(size / 1024))} КБ`
+	}
+
+	return `${(size / 1024 / 1024).toFixed(1)} МБ`
+}
+
 function SwipeNotice({ message, onExited }: NoticeProps) {
 	const [offsetX, setOffsetX] = useState(0)
 	const [isClosing, setIsClosing] = useState(false)
@@ -110,29 +129,97 @@ function SwipeNotice({ message, onExited }: NoticeProps) {
 
 export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 	const formRef = useRef<HTMLFormElement>(null)
+	const fileInputRef = useRef<HTMLInputElement>(null)
+	const attachedFilesRef = useRef<AttachedFile[]>([])
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [noticeMessage, setNoticeMessage] = useState<string | null>(null)
+	const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([])
+
+	useEffect(() => {
+		attachedFilesRef.current = attachedFiles
+	}, [attachedFiles])
+
+	useEffect(() => {
+		return () => {
+			attachedFilesRef.current.forEach((item) =>
+				URL.revokeObjectURL(item.url),
+			)
+		}
+	}, [])
+
+	function addFiles(fileList: FileList | null) {
+		if (!fileList) {
+			return
+		}
+
+		const files = Array.from(fileList)
+		const freeSlots = MAX_FILES - attachedFiles.length
+
+		if (freeSlots <= 0) {
+			setNoticeMessage("Можно прикрепить максимум 10 файлов.")
+			return
+		}
+
+		const validFiles = files
+			.slice(0, freeSlots)
+			.filter((file) => file.size <= MAX_FILE_SIZE)
+
+		if (files.length > freeSlots) {
+			setNoticeMessage("Добавил первые 10 файлов. Лимит вложений - 10.")
+		}
+
+		if (validFiles.length !== Math.min(files.length, freeSlots)) {
+			setNoticeMessage("Файлы больше 25 МБ не добавлены.")
+		}
+
+		setAttachedFiles((currentFiles) => [
+			...currentFiles,
+			...validFiles.map((file) => ({
+				id: `${file.name}-${file.lastModified}-${crypto.randomUUID()}`,
+				file,
+				url: URL.createObjectURL(file),
+			})),
+		])
+
+		if (fileInputRef.current) {
+			fileInputRef.current.value = ""
+		}
+	}
+
+	function removeFile(id: string) {
+		setAttachedFiles((currentFiles) => {
+			const removedFile = currentFiles.find((item) => item.id === id)
+
+			if (removedFile) {
+				URL.revokeObjectURL(removedFile.url)
+			}
+
+			return currentFiles.filter((item) => item.id !== id)
+		})
+	}
 
 	async function formHandler(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
 
 		const formData = new FormData(e.currentTarget)
+		const orderData = new FormData()
+
+		orderData.append("projectTypeId", String(formData.get("type") || ""))
+		orderData.append("contact", String(formData.get("contacts") || ""))
+		orderData.append("task", String(formData.get("task") || ""))
+		orderData.append("budgetId", String(formData.get("budget") || ""))
+		orderData.append("urgencyId", String(formData.get("deadlines") || ""))
+
+		attachedFiles.forEach(({ file }) => {
+			orderData.append("files", file)
+		})
 
 		setIsSubmitting(true)
 
 		try {
 			const res = await fetch("/api/order", {
 				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					projectTypeId: formData.get("type"),
-					contact: formData.get("contacts"),
-					task: formData.get("task"),
-					budgetId: formData.get("budget"),
-					urgencyId: formData.get("deadlines"),
-				}),
+				body: orderData,
 			})
 
 			if (!res.ok) {
@@ -140,6 +227,8 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 			}
 
 			formRef.current?.reset()
+			attachedFiles.forEach((item) => URL.revokeObjectURL(item.url))
+			setAttachedFiles([])
 			setNoticeMessage(
 				"Заявка на создание проекта отправлена. Скоро с вами свяжусь.",
 			)
@@ -164,121 +253,222 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 				ref={formRef}
 				onSubmit={formHandler}
 				method="POST"
-				className="flex flex-col w-1/2 mt-12"
+				className="grid w-full grid-cols-[minmax(0,1fr)_minmax(22rem,0.8fr)] gap-16 mt-12"
 			>
-				<div>
-					<div className="text-[var(--white)] text-base mb-4">
-						Тип проекта
+				<div className="flex flex-col">
+					<div>
+						<div className="text-[var(--white)] text-base mb-4">
+							Тип проекта
+						</div>
+						<div className="flex gap-4">
+							{projectTypes
+								?.sort(
+									(
+										a: { id: number; title: string },
+										b: { id: number; title: string },
+									) => a.id - b.id,
+								)
+								.map(
+									(option: { id: number; title: string }) => (
+										<label
+											key={option.id}
+											className="cursor-pointer"
+										>
+											<input
+												type="radio"
+												name="type"
+												value={option.id}
+												className="hidden peer"
+											/>
+											<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
+												{option.title}
+											</div>
+										</label>
+									),
+								)}
+						</div>
 					</div>
-					<div className="flex gap-4">
-						{projectTypes
-							?.sort(
-								(
-									a: { id: number; title: string },
-									b: { id: number; title: string },
-								) => a.id - b.id,
-							)
-							.map((option: { id: number; title: string }) => (
-								<label
-									key={option.id}
-									className="cursor-pointer"
-								>
-									<input
-										type="radio"
-										name="type"
-										value={option.id}
-										className="hidden peer"
-									/>
-									<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
-										{option.title}
-									</div>
-								</label>
-							))}
+					<input
+						type="text"
+						placeholder="Telegram / Email"
+						name="contacts"
+						required
+						className="mt-12 border-b border-[var(--white)] text-[var(--white)] placeholder:text-[var(--white)] placeholder:text-base outline-none focus:border-[var(--white)]/50 pb-1.5 duration-300"
+					/>
+					<textarea
+						name="task"
+						placeholder="Опишите задачу..."
+						required
+						className="border-b border-[var(--white)] h-24 resize-none text-[var(--white)] placeholder:text-[var(--white)] placeholder:text-base mt-12 pb-1.5 outline-none focus:border-[var(--white)]/50 duration-300"
+					></textarea>
+					<div className="mt-12">
+						<div className="text-[var(--white)] text-base mb-4">
+							Бюджет
+						</div>
+						<div className="flex gap-4">
+							{budgets
+								?.sort(
+									(
+										a: { id: number; title: string },
+										b: { id: number; title: string },
+									) => a.id - b.id,
+								)
+								.map(
+									(option: { id: number; title: string }) => (
+										<label
+											key={option.id}
+											className="cursor-pointer"
+										>
+											<input
+												type="radio"
+												name="budget"
+												value={option.id}
+												className="hidden peer"
+											/>
+											<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
+												{option.title}
+											</div>
+										</label>
+									),
+								)}
+						</div>
 					</div>
+					<div className="mt-12">
+						<div className="text-[var(--white)] text-base mb-4">
+							Срочность
+						</div>
+						<div className="flex gap-4">
+							{deadlines
+								?.sort(
+									(
+										a: { id: number; title: string },
+										b: { id: number; title: string },
+									) => a.id - b.id,
+								)
+								.map(
+									(option: { id: number; title: string }) => (
+										<label
+											key={option.id}
+											className="cursor-pointer"
+										>
+											<input
+												type="radio"
+												name="deadlines"
+												value={option.id}
+												className="hidden peer"
+											/>
+											<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
+												{option.title}
+											</div>
+										</label>
+									),
+								)}
+						</div>
+					</div>
+					<button
+						type="submit"
+						disabled={isSubmitting}
+						className="bg-[var(--white)] border border-2 border-[var(--white)] flex items-center justify-center gap-3 p-3 w-1/3 mt-10 cursor-pointer group outline-none focus:bg-transparent hover:bg-transparent disabled:opacity-60 disabled:cursor-wait duration-300"
+					>
+						<div className="text-[var(--black)] font-semi text-base group-hover:text-[var(--white)] group-focus:text-[var(--white)] duration-300">
+							{isSubmitting
+								? "Отправляем..."
+								: "Отправить заявку"}
+						</div>
+						<ArrowIcon className="text-[var(--black)] size-6 group-hover:text-[var(--white)] group-focus:text-[var(--white)] group-hover:-rotate-45 duration-300" />
+					</button>
 				</div>
-				<input
-					type="text"
-					placeholder="Telegram / Email"
-					name="contacts"
-					required
-					className="mt-12 border-b border-[var(--white)] text-[var(--white)] placeholder:text-[var(--white)] placeholder:text-base outline-none focus:border-[var(--white)]/50 pb-1.5 duration-300"
-				/>
-				<textarea
-					name="task"
-					placeholder="Опишите задачу..."
-					required
-					className="border-b border-[var(--white)] h-24 resize-none text-[var(--white)] placeholder:text-[var(--white)] placeholder:text-base mt-12 pb-1.5 outline-none focus:border-[var(--white)]/50 duration-300"
-				></textarea>
-				<div className="mt-12">
+
+				<div className="flex flex-col">
 					<div className="text-[var(--white)] text-base mb-4">
-						Бюджет
+						Файлы к заказу
 					</div>
-					<div className="flex gap-4">
-						{budgets
-							?.sort(
-								(
-									a: { id: number; title: string },
-									b: { id: number; title: string },
-								) => a.id - b.id,
-							)
-							.map((option: { id: number; title: string }) => (
-								<label
-									key={option.id}
-									className="cursor-pointer"
+					<label
+						className="flex min-h-40 cursor-pointer flex-col items-center justify-center border border-dashed border-[var(--white)]/60 px-6 py-8 text-center text-[var(--white)] transition-colors duration-300 hover:border-[var(--white)] hover:bg-[var(--white)]/5"
+						onDragOver={(e) => e.preventDefault()}
+						onDrop={(e) => {
+							e.preventDefault()
+							addFiles(e.dataTransfer.files)
+						}}
+					>
+						<input
+							ref={fileInputRef}
+							type="file"
+							name="files"
+							accept={ACCEPTED_FILE_TYPES}
+							multiple
+							className="hidden"
+							onChange={(e) => addFiles(e.target.files)}
+						/>
+						<span className="text-base font-semibold">
+							Прикрепить ТЗ, макеты, фото или скрины
+						</span>
+						<span className="mt-3 text-sm leading-6 text-[var(--white)]/60">
+							Перетащите файлы сюда или нажмите для выбора.
+							<br />
+							До 10 файлов, каждый до 25 МБ.
+						</span>
+					</label>
+
+					<div className="mt-5 flex items-center justify-between text-xs text-[var(--white)]/60">
+						<span>
+							{attachedFiles.length} из {MAX_FILES} файлов
+						</span>
+						<span>jpg, png, webp, pdf, zip, fig, docx, md</span>
+					</div>
+
+					{attachedFiles.length > 0 ? (
+						<div className="mt-4 flex max-h-64 flex-col gap-3 overflow-y-auto pr-1">
+							{attachedFiles.map(({ id, file, url }) => (
+								<div
+									key={id}
+									className="grid grid-cols-[3rem_minmax(0,1fr)_auto] items-center gap-3 border border-[var(--white)]/15 p-3 text-[var(--white)]"
 								>
-									<input
-										type="radio"
-										name="budget"
-										value={option.id}
-										className="hidden peer"
-									/>
-									<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
-										{option.title}
+									<div className="flex h-12 w-12 items-center justify-center overflow-hidden border border-[var(--white)]/15 bg-[var(--white)]/5 text-xs uppercase text-[var(--white)]/60">
+										{file.type.startsWith("image/") ? (
+											<div
+												aria-hidden="true"
+												className="h-full w-full bg-cover bg-center"
+												style={{
+													backgroundImage: `url(${url})`,
+												}}
+											/>
+										) : (
+											file.name.split(".").pop() || "file"
+										)}
 									</div>
-								</label>
-							))}
-					</div>
-				</div>
-				<div className="mt-12">
-					<div className="text-[var(--white)] text-base mb-4">
-						Срочность
-					</div>
-					<div className="flex gap-4">
-						{deadlines
-							?.sort(
-								(
-									a: { id: number; title: string },
-									b: { id: number; title: string },
-								) => a.id - b.id,
-							)
-							.map((option: { id: number; title: string }) => (
-								<label
-									key={option.id}
-									className="cursor-pointer"
-								>
-									<input
-										type="radio"
-										name="deadlines"
-										value={option.id}
-										className="hidden peer"
-									/>
-									<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
-										{option.title}
+									<div className="min-w-0">
+										<div className="truncate text-sm">
+											{file.name}
+										</div>
+										<div className="mt-1 text-xs text-[var(--white)]/50">
+											{formatFileSize(file.size)}
+										</div>
 									</div>
-								</label>
+									<div className="flex items-center gap-2">
+										<a
+											href={url}
+											target="_blank"
+											rel="noreferrer"
+											className="border border-[var(--white)]/35 px-2.5 py-1 text-xs text-[var(--white)] transition-colors duration-300 hover:border-[var(--white)] hover:bg-[var(--white)] hover:text-[var(--black)]"
+										>
+											Просмотр
+										</a>
+										<button
+											type="button"
+											onClick={() => removeFile(id)}
+											className="border border-[var(--white)]/35 px-2.5 py-1 text-xs text-[var(--white)] transition-colors duration-300 hover:border-[var(--white)] hover:bg-[var(--white)] hover:text-[var(--black)]"
+										>
+											Убрать
+										</button>
+									</div>
+								</div>
 							))}
-					</div>
+						</div>
+					) : (
+						""
+					)}
 				</div>
-				<button
-					type="submit"
-					disabled={isSubmitting}
-					className="bg-[var(--white)] border border-2 border-[var(--white)] flex items-center justify-center gap-3 p-3 w-1/3 mt-10 cursor-pointer group outline-none focus:bg-transparent hover:bg-transparent disabled:opacity-60 disabled:cursor-wait duration-300"
-				>
-					<div className="text-[var(--black)] font-semi text-base group-hover:text-[var(--white)] group-focus:text-[var(--white)] duration-300">
-						{isSubmitting ? "Отправляем..." : "Отправить заявку"}
-					</div>
-					<ArrowIcon className="text-[var(--black)] size-6 group-hover:text-[var(--white)] group-focus:text-[var(--white)] group-hover:-rotate-45 duration-300" />
-				</button>
 			</form>
 		</>
 	)

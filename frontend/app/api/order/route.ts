@@ -1,14 +1,16 @@
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
-	const body = await req.json()
+	const contentType = req.headers.get("content-type") || ""
+	const isMultipart = contentType.includes("multipart/form-data")
+	const body = isMultipart ? await req.formData() : await req.json()
 
 	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order`, {
 		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify(body),
+		headers: isMultipart
+			? undefined
+			: { "Content-Type": "application/json" },
+		body: isMultipart ? body : JSON.stringify(body),
 		cache: "no-store",
 	})
 
