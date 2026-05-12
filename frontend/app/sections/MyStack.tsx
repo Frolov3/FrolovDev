@@ -95,12 +95,12 @@ const stackList = [
 
 export default function MyStack() {
 	return (
-		<div className="h-screen bg-[var(--black)] px-24 pt-8 flex flex-col">
+		<div className="min-h-screen bg-[var(--black)] px-6 sm:px-10 lg:px-24 pt-8 pb-8 flex flex-col">
 			<div className="flex justify-between">
 				<SectionTitle style="white">My stack</SectionTitle>
 				<NumberSection style="white">02</NumberSection>
 			</div>
-			<div className="grid grid-cols-4 gap-x-20 gap-y-9 mt-20">
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-20 gap-y-9 mt-16 lg:mt-20">
 				{stackList.map((stack) => (
 					<StackCard stack={stack} key={stack.id} />
 				))}

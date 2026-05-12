@@ -28,12 +28,12 @@ const skills = [
 
 export default function WhatIBuild() {
 	return (
-		<div className="h-screen bg-[var(--white)] px-24 flex flex-col">
-			<div className="flex justify-between mt-8">
+		<div className="min-h-screen bg-[var(--white)] px-6 py-8 sm:px-10 lg:px-24 flex flex-col">
+			<div className="flex justify-between">
 				<SectionTitle>What i build</SectionTitle>
 				<NumberSection>01</NumberSection>
 			</div>
-			<div className="flex-1 flex justify-center items-center gap-48">
+			<div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 md:gap-10 lg:gap-24 xl:gap-48 items-center justify-items-center py-16 md:py-0">
 				{skills.map((skill) => (
 					<SkillCard skill={skill} key={skill.id} />
 				))}

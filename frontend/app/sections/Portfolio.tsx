@@ -25,13 +25,13 @@ const workList = [
 
 export default function Portfolio() {
 	return (
-		<div className="h-screen bg-[var(--white)] px-24 pt-8 flex flex-col">
+		<div className="min-h-screen bg-[var(--white)] px-6 sm:px-10 lg:px-24 py-8 flex flex-col">
 			<div className="flex justify-between">
 				<SectionTitle>Portfolio</SectionTitle>
 				<NumberSection>03</NumberSection>
 			</div>
 
-			<div className="flex-1 flex justify-center items-center gap-8">
+			<div className="flex-1 grid grid-cols-1 lg:grid-cols-2 content-center justify-items-stretch gap-8 py-12">
 				{workList.map((work) => (
 					<WorkCard work={work} key={work.id} />
 				))}

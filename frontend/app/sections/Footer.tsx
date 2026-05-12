@@ -6,7 +6,7 @@ type FooterProps = {
 
 export default function Footer({ socialNetworks }: FooterProps) {
 	return (
-		<footer className="h-36 bg-[var(--white)] px-24 flex justify-between items-center">
+		<footer className="sm:h-36 bg-[var(--white)] px-8 sm:px-24 flex-col-reverse sm:flex-row gap-4 pt-2 flex justify-between items-center">
 			<div className="uppercase font-extrabold text-[var(--black)] -tracking-[6%] text-6xl">
 				Frolov
 			</div>

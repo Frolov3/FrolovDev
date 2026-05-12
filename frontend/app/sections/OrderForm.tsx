@@ -253,14 +253,14 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 				ref={formRef}
 				onSubmit={formHandler}
 				method="POST"
-				className="grid w-full grid-cols-[minmax(0,1fr)_minmax(22rem,0.8fr)] gap-16 mt-12"
+				className="grid w-full grid-cols-1 gap-12 mt-10 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,0.8fr)] lg:gap-16 lg:mt-12"
 			>
 				<div className="flex flex-col">
 					<div>
 						<div className="text-[var(--white)] text-base mb-4">
 							Тип проекта
 						</div>
-						<div className="flex gap-4">
+						<div className="flex flex-wrap gap-3 sm:gap-4">
 							{projectTypes
 								?.sort(
 									(
@@ -293,19 +293,19 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 						placeholder="Telegram / Email"
 						name="contacts"
 						required
-						className="mt-12 border-b border-[var(--white)] text-[var(--white)] placeholder:text-[var(--white)] placeholder:text-base outline-none focus:border-[var(--white)]/50 pb-1.5 duration-300"
+						className="mt-10 lg:mt-12 border-b border-[var(--white)] text-[var(--white)] placeholder:text-[var(--white)] placeholder:text-base outline-none focus:border-[var(--white)]/50 pb-1.5 duration-300"
 					/>
 					<textarea
 						name="task"
 						placeholder="Опишите задачу..."
 						required
-						className="border-b border-[var(--white)] h-24 resize-none text-[var(--white)] placeholder:text-[var(--white)] placeholder:text-base mt-12 pb-1.5 outline-none focus:border-[var(--white)]/50 duration-300"
+						className="border-b border-[var(--white)] h-24 resize-none text-[var(--white)] placeholder:text-[var(--white)] placeholder:text-base mt-10 lg:mt-12 pb-1.5 outline-none focus:border-[var(--white)]/50 duration-300"
 					></textarea>
-					<div className="mt-12">
+					<div className="mt-10 lg:mt-12">
 						<div className="text-[var(--white)] text-base mb-4">
 							Бюджет
 						</div>
-						<div className="flex gap-4">
+						<div className="flex flex-wrap gap-3 sm:gap-4">
 							{budgets
 								?.sort(
 									(
@@ -333,11 +333,11 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 								)}
 						</div>
 					</div>
-					<div className="mt-12">
+					<div className="mt-10 lg:mt-12">
 						<div className="text-[var(--white)] text-base mb-4">
 							Срочность
 						</div>
-						<div className="flex gap-4">
+						<div className="flex flex-wrap gap-3 sm:gap-4">
 							{deadlines
 								?.sort(
 									(
@@ -365,18 +365,6 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 								)}
 						</div>
 					</div>
-					<button
-						type="submit"
-						disabled={isSubmitting}
-						className="bg-[var(--white)] border border-2 border-[var(--white)] flex items-center justify-center gap-3 p-3 w-1/3 mt-10 cursor-pointer group outline-none focus:bg-transparent hover:bg-transparent disabled:opacity-60 disabled:cursor-wait duration-300"
-					>
-						<div className="text-[var(--black)] font-semi text-base group-hover:text-[var(--white)] group-focus:text-[var(--white)] duration-300">
-							{isSubmitting
-								? "Отправляем..."
-								: "Отправить заявку"}
-						</div>
-						<ArrowIcon className="text-[var(--black)] size-6 group-hover:text-[var(--white)] group-focus:text-[var(--white)] group-hover:-rotate-45 duration-300" />
-					</button>
 				</div>
 
 				<div className="flex flex-col">
@@ -384,7 +372,7 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 						Файлы к заказу
 					</div>
 					<label
-						className="flex min-h-40 cursor-pointer flex-col items-center justify-center border border-dashed border-[var(--white)]/60 px-6 py-8 text-center text-[var(--white)] transition-colors duration-300 hover:border-[var(--white)] hover:bg-[var(--white)]/5"
+						className="flex min-h-40 cursor-pointer flex-col items-center justify-center border border-dashed border-[var(--white)]/60 px-4 py-8 text-center text-[var(--white)] transition-colors duration-300 hover:border-[var(--white)] hover:bg-[var(--white)]/5 sm:px-6"
 						onDragOver={(e) => e.preventDefault()}
 						onDrop={(e) => {
 							e.preventDefault()
@@ -410,7 +398,7 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 						</span>
 					</label>
 
-					<div className="mt-5 flex items-center justify-between text-xs text-[var(--white)]/60">
+					<div className="mt-5 flex flex-col gap-2 text-xs text-[var(--white)]/60 sm:flex-row sm:items-center sm:justify-between">
 						<span>
 							{attachedFiles.length} из {MAX_FILES} файлов
 						</span>
@@ -422,7 +410,7 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 							{attachedFiles.map(({ id, file, url }) => (
 								<div
 									key={id}
-									className="grid grid-cols-[3rem_minmax(0,1fr)_auto] items-center gap-3 border border-[var(--white)]/15 p-3 text-[var(--white)]"
+									className="grid grid-cols-[3rem_minmax(0,1fr)] items-center gap-3 border border-[var(--white)]/15 p-3 text-[var(--white)] sm:grid-cols-[3rem_minmax(0,1fr)_auto]"
 								>
 									<div className="flex h-12 w-12 items-center justify-center overflow-hidden border border-[var(--white)]/15 bg-[var(--white)]/5 text-xs uppercase text-[var(--white)]/60">
 										{file.type.startsWith("image/") ? (
@@ -445,7 +433,7 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 											{formatFileSize(file.size)}
 										</div>
 									</div>
-									<div className="flex items-center gap-2">
+									<div className="col-span-2 flex flex-wrap items-center gap-2 sm:col-span-1">
 										<a
 											href={url}
 											target="_blank"
@@ -469,6 +457,17 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 						""
 					)}
 				</div>
+
+				<button
+					type="submit"
+					disabled={isSubmitting}
+					className="bg-[var(--white)] border-2 border-[var(--white)] flex items-center justify-center gap-3 p-3 w-full sm:w-fit sm:min-w-64 cursor-pointer group outline-none focus:bg-transparent hover:bg-transparent disabled:opacity-60 disabled:cursor-wait duration-300 lg:col-span-2"
+				>
+					<div className="text-[var(--black)] font-semi text-base group-hover:text-[var(--white)] group-focus:text-[var(--white)] duration-300">
+						{isSubmitting ? "Отправляем..." : "Отправить заявку"}
+					</div>
+					<ArrowIcon className="text-[var(--black)] size-6 group-hover:text-[var(--white)] group-focus:text-[var(--white)] group-hover:-rotate-45 duration-300" />
+				</button>
 			</form>
 		</>
 	)

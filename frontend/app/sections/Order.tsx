@@ -69,12 +69,12 @@ export default async function Order() {
 	const [budgets, projectTypes, deadlines] = await fetchOrderOptions()
 
 	return (
-		<div className="h-screen bg-[var(--black)] px-24 pt-8 flex flex-col">
+		<div className="min-h-screen bg-[var(--black)] px-6 py-8 sm:px-10 lg:px-24 flex flex-col">
 			<div className="flex justify-between">
 				<SectionTitle style="white">Order</SectionTitle>
 				<NumberSection style="white">04</NumberSection>
 			</div>
-			<div className="text-2xl font-semibold text-[var(--white)]">
+			<div className="text-xl sm:text-2xl font-semibold text-[var(--white)]">
 				Оформить заказ
 			</div>
 
