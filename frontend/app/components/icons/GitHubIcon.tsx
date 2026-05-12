@@ -1,6 +1,6 @@
-import type Icon from "@/app/types/icon"
+import type IconProps from "@/app/types/iconProps"
 
-export default function GitHubIcon({ className = "" }: Icon) {
+export default function GitHubIcon({ className = "" }: IconProps) {
 	return (
 		<svg
 			width="22"

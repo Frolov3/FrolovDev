@@ -1,6 +1,6 @@
-import Icon from "@/app/types/icon"
+import type IconProps from "@/app/types/iconProps"
 
-export default function LolzIcon({ className = "" }: Icon) {
+export default function LolzIcon({ className = "" }: IconProps) {
 	return (
 		<svg
 			width="25"

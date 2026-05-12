@@ -1,6 +1,6 @@
-import Icon from "@/app/types/icon"
+import type IconProps from "@/app/types/iconProps"
 
-export default function TelegramIcon({ className = "" }: Icon) {
+export default function TelegramIcon({ className = "" }: IconProps) {
 	return (
 		<svg
 			width="20"

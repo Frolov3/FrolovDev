@@ -3,6 +3,7 @@ type Stack = {
 	type: string
 	title: string
 	detail: string
+	detailDescription: string
 }
 
 export default Stack
