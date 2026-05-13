@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 
 import ArrowIcon from "../components/icons/ArrowIcon"
+import MediaViewer from "../components/MediaViewer"
 
 type Option = {
 	id: number
@@ -134,6 +135,8 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [noticeMessage, setNoticeMessage] = useState<string | null>(null)
 	const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([])
+	const [isViewerOpen, setIsViewerOpen] = useState<boolean>(false)
+	const [selectedMediaIndex, setSelectedMediaIndex] = useState<number>(0)
 
 	useEffect(() => {
 		attachedFilesRef.current = attachedFiles
@@ -146,6 +149,15 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 			)
 		}
 	}, [])
+
+	const mediaItems = attachedFiles
+		.filter(({ file }) => file.type.startsWith("image/"))
+		.map(({ file, url }) => ({
+			type: "image" as const,
+			url,
+			name: file.name,
+			alt: file.name,
+		}))
 
 	function addFiles(fileList: FileList | null) {
 		if (!fileList) {
@@ -241,6 +253,14 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 		}
 	}
 
+	const optionClassName = `border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] 
+	peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] 
+	peer-checked:hover:text-[var(--black)] peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 
+	peer-checked:focus-visible:text-[var(--black)] peer-checked:focus-visible:bg-[var(--white)]/50 peer-checked:focus-visible:border-[var(--white)]/50 
+	hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 
+	focus-visible:border-[var(--white)]/50 focus-visible:text-[var(--white)]/50 outline-none
+	duration-300`
+
 	return (
 		<>
 			{noticeMessage ? (
@@ -280,7 +300,22 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 												value={option.id}
 												className="hidden peer"
 											/>
-											<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
+											<div
+												tabIndex={0}
+												className={optionClassName}
+												onKeyDown={(e) => {
+													if (
+														e.key === "Enter" ||
+														e.key === " "
+													) {
+														e.preventDefault()
+														const input = e
+															.currentTarget
+															.previousElementSibling as HTMLInputElement
+														input.click()
+													}
+												}}
+											>
 												{option.title}
 											</div>
 										</label>
@@ -325,7 +360,22 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 												value={option.id}
 												className="hidden peer"
 											/>
-											<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
+											<div
+												tabIndex={0}
+												className={optionClassName}
+												onKeyDown={(e) => {
+													if (
+														e.key === "Enter" ||
+														e.key === " "
+													) {
+														e.preventDefault()
+														const input = e
+															.currentTarget
+															.previousElementSibling as HTMLInputElement
+														input.click()
+													}
+												}}
+											>
 												{option.title}
 											</div>
 										</label>
@@ -357,7 +407,22 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 												value={option.id}
 												className="hidden peer"
 											/>
-											<div className="border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] peer-checked:hover:text-[var(--black)]/50 peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 hover:border-[var(--white)]/50 hover:text-[var(--white)]/50 duration-300">
+											<div
+												tabIndex={0}
+												className={optionClassName}
+												onKeyDown={(e) => {
+													if (
+														e.key === "Enter" ||
+														e.key === " "
+													) {
+														e.preventDefault()
+														const input = e
+															.currentTarget
+															.previousElementSibling as HTMLInputElement
+														input.click()
+													}
+												}}
+											>
 												{option.title}
 											</div>
 										</label>
@@ -434,18 +499,33 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 										</div>
 									</div>
 									<div className="col-span-2 flex flex-wrap items-center gap-2 sm:col-span-1">
-										<a
-											href={url}
-											target="_blank"
-											rel="noreferrer"
-											className="border border-[var(--white)]/35 px-2.5 py-1 text-xs text-[var(--white)] transition-colors duration-300 hover:border-[var(--white)] hover:bg-[var(--white)] hover:text-[var(--black)]"
-										>
-											Просмотр
-										</a>
+										{file.type.startsWith("image/") ? (
+											<button
+												type="button"
+												className="border border-[var(--white)]/35 px-2.5 py-1 text-xs text-[var(--white)] transition-colors duration-300 hover:border-[var(--white)] hover:bg-[var(--white)] hover:text-[var(--black)] focus:border-[var(--white)] focus:bg-[var(--white)] focus:text-[var(--black)] focus:outline-0 cursor-pointer"
+												onClick={() => {
+													const imageIndex =
+														mediaItems.findIndex(
+															(item) =>
+																item.url ===
+																url,
+														)
+
+													setSelectedMediaIndex(
+														imageIndex,
+													)
+													setIsViewerOpen(true)
+												}}
+											>
+												Просмотр
+											</button>
+										) : (
+											""
+										)}
 										<button
 											type="button"
 											onClick={() => removeFile(id)}
-											className="border border-[var(--white)]/35 px-2.5 py-1 text-xs text-[var(--white)] transition-colors duration-300 hover:border-[var(--white)] hover:bg-[var(--white)] hover:text-[var(--black)]"
+											className="border border-[var(--white)]/35 px-2.5 py-1 text-xs text-[var(--white)] transition-colors duration-300 hover:border-[var(--white)] hover:bg-[var(--white)] hover:text-[var(--black)] focus:border-[var(--white)] focus:bg-[var(--white)] focus:text-[var(--black)] focus:outline-0 cursor-pointer"
 										>
 											Убрать
 										</button>
@@ -466,9 +546,15 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 					<div className="text-[var(--black)] font-semi text-base group-hover:text-[var(--white)] group-focus:text-[var(--white)] duration-300">
 						{isSubmitting ? "Отправляем..." : "Отправить заявку"}
 					</div>
-					<ArrowIcon className="text-[var(--black)] size-6 group-hover:text-[var(--white)] group-focus:text-[var(--white)] group-hover:-rotate-45 duration-300" />
+					<ArrowIcon className="text-[var(--black)] size-6 group-hover:text-[var(--white)] group-focus:text-[var(--white)] group-hover:-rotate-45 group-focus:-rotate-45 duration-300" />
 				</button>
 			</form>
+			<MediaViewer
+				open={isViewerOpen}
+				onClose={() => setIsViewerOpen(false)}
+				startIndex={selectedMediaIndex}
+				items={mediaItems}
+			/>
 		</>
 	)
 }
