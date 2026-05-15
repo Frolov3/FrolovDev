@@ -1,6 +1,7 @@
-import NumberSection from "../components/NumberSection"
-import SectionTitle from "../components/SectionTitle"
-import StackCard from "../components/StackCard"
+import FadeInSection from "../components/ui/FadeInSection"
+import NumberSection from "../components/ui/NumberSection"
+import SectionTitle from "../components/ui/SectionTitle"
+import StackCard from "../components/ui/StackCard"
 
 const stackList = [
 	{
@@ -102,7 +103,9 @@ export default function MyStack() {
 			</div>
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-20 gap-y-9 mt-16 lg:mt-20">
 				{stackList.map((stack) => (
-					<StackCard stack={stack} key={stack.id} />
+					<FadeInSection key={stack.id}>
+						<StackCard stack={stack} key={stack.id} />
+					</FadeInSection>
 				))}
 			</div>
 		</div>

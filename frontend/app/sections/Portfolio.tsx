@@ -1,6 +1,7 @@
-import NumberSection from "../components/NumberSection"
-import SectionTitle from "../components/SectionTitle"
-import WorkCard from "../components/WorkCard"
+import FadeInSection from "../components/ui/FadeInSection"
+import NumberSection from "../components/ui/NumberSection"
+import SectionTitle from "../components/ui/SectionTitle"
+import WorkCard from "../components/ui/WorkCard"
 
 const workList = [
 	{
@@ -33,7 +34,9 @@ export default function Portfolio() {
 
 			<div className="flex-1 grid grid-cols-1 lg:grid-cols-2 content-center justify-items-stretch gap-8 py-12">
 				{workList.map((work) => (
-					<WorkCard work={work} key={work.id} />
+					<FadeInSection key={work.id} className="h-full">
+						<WorkCard work={work} />
+					</FadeInSection>
 				))}
 			</div>
 		</div>

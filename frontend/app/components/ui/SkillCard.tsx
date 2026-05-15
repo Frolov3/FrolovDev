@@ -1,5 +1,5 @@
 import Image from "next/image"
-import type Skill from "../types/skill"
+import type Skill from "../../types/skill"
 
 type SkillCardProps = {
 	skill: Skill

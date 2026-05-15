@@ -1,6 +1,7 @@
-import NumberSection from "../components/NumberSection"
-import SectionTitle from "../components/SectionTitle"
-import SkillCard from "../components/SkillCard"
+import FadeInSection from "../components/ui/FadeInSection"
+import NumberSection from "../components/ui/NumberSection"
+import SectionTitle from "../components/ui/SectionTitle"
+import SkillCard from "../components/ui/SkillCard"
 
 const skills = [
 	{
@@ -35,7 +36,9 @@ export default function WhatIBuild() {
 			</div>
 			<div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 md:gap-10 lg:gap-24 xl:gap-48 items-center justify-items-center py-16 md:py-0">
 				{skills.map((skill) => (
-					<SkillCard skill={skill} key={skill.id} />
+					<FadeInSection key={skill.id}>
+						<SkillCard skill={skill} key={skill.id} />
+					</FadeInSection>
 				))}
 			</div>
 		</div>

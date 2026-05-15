@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 
 import ArrowIcon from "../components/icons/ArrowIcon"
-import MediaViewer from "../components/MediaViewer"
+import MediaViewer from "../components/ui/MediaViewer"
 
 type Option = {
 	id: number

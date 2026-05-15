@@ -1,5 +1,6 @@
-import NumberSection from "../components/NumberSection"
-import SectionTitle from "../components/SectionTitle"
+import FadeInSection from "../components/ui/FadeInSection"
+import NumberSection from "../components/ui/NumberSection"
+import SectionTitle from "../components/ui/SectionTitle"
 import OrderForm from "./OrderForm"
 
 type Option = {
@@ -74,15 +75,16 @@ export default async function Order() {
 				<SectionTitle style="white">Order</SectionTitle>
 				<NumberSection style="white">04</NumberSection>
 			</div>
-			<div className="text-xl sm:text-2xl font-semibold text-[var(--white)]">
-				Оформить заказ
-			</div>
-
-			<OrderForm
-				budgets={budgets.budgets}
-				projectTypes={projectTypes.projectTypes}
-				deadlines={deadlines.urgencies}
-			/>
+			<FadeInSection>
+				<div className="text-xl sm:text-2xl font-semibold text-[var(--white)]">
+					Оформить заказ
+				</div>
+				<OrderForm
+					budgets={budgets.budgets}
+					projectTypes={projectTypes.projectTypes}
+					deadlines={deadlines.urgencies}
+				/>
+			</FadeInSection>
 		</div>
 	)
 }

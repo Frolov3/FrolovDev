@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Stack from "../types/stack"
+import Stack from "../../types/stack"
 
 type StackCardProps = {
 	stack: Stack

@@ -1,4 +1,4 @@
-import SocialNetworkCard from "../components/SocialNetworkCard"
+import SocialNetworkCard from "../components/ui/SocialNetworkCard"
 import type socialNetwork from "../types/socialNetwork"
 
 type HeroProps = {
