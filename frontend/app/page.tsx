@@ -33,17 +33,15 @@ const socialNetworks: socialNetwork[] = [
 
 export default function Home() {
 	return (
-		<html>
-			<body>
-				<main>
-					<Hero socialNetworks={socialNetworks} />
-					<WhatIBuild />
-					<MyStack />
-					<Portfolio />
-					<Order />
-				</main>
-				<Footer socialNetworks={socialNetworks} />
-			</body>
-		</html>
+		<>
+			<main>
+				<Hero socialNetworks={socialNetworks} />
+				<WhatIBuild />
+				<MyStack />
+				<Portfolio />
+				<Order />
+			</main>
+			<Footer socialNetworks={socialNetworks} />
+		</>
 	)
 }

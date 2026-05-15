@@ -8,7 +8,7 @@ type HeroProps = {
 export default function Hero({ socialNetworks }: HeroProps) {
 	return (
 		<div className="relative min-h-screen overflow-hidden bg-[var(--black)] font-[var(--font)] flex flex-col justify-center gap-4 px-6 sm:px-10 lg:px-24">
-			<div className="relative z-10 w-fit max-w-full">
+			<div className="relative z-10 w-fit max-w-full mt-32">
 				<h1 className="relative z-10 text-[var(--white)] font-extrabold uppercase text-[clamp(3.4rem,18vw,16.5rem)] leading-none tracking-[-6%] sm:-translate-1 md:-translate-2 lg:-translate-3">
 					Frolov
 				</h1>

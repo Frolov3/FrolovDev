@@ -182,6 +182,7 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 	const formRef = useRef<HTMLFormElement>(null)
 	const fileInputRef = useRef<HTMLInputElement>(null)
 	const attachedFilesRef = useRef<AttachedFile[]>([])
+	const nextFileIdRef = useRef(0)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [noticeMessage, setNoticeMessage] = useState<string | null>(null)
 	const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([])
@@ -235,13 +236,20 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 			setNoticeMessage("Файлы больше 25 МБ не добавлены.")
 		}
 
-		setAttachedFiles((currentFiles) => [
-			...currentFiles,
-			...validFiles.map((file) => ({
-				id: `${file.name}-${file.lastModified}-${crypto.randomUUID()}`,
+		const nextFiles = validFiles.map((file) => {
+			const fileId = nextFileIdRef.current
+			nextFileIdRef.current += 1
+
+			return {
+				id: `${file.name}-${file.lastModified}-${file.size}-${fileId}`,
 				file,
 				url: URL.createObjectURL(file),
-			})),
+			}
+		})
+
+		setAttachedFiles((currentFiles) => [
+			...currentFiles,
+			...nextFiles,
 		])
 
 		if (fileInputRef.current) {
