@@ -10,7 +10,7 @@ const stackList = [
 		title: "React",
 		detail: "Library",
 		detailDescription:
-			"Компонентные интерфейсы с живой логикой и понятной структурой.",
+			"Компоненты, хуки и понятная структура.",
 	},
 	{
 		id: 2,
@@ -18,14 +18,14 @@ const stackList = [
 		title: "Tailwind",
 		detail: "Framework",
 		detailDescription:
-			"Быстрая стилизация интерфейсов без лишней CSS-обвязки.",
+			"Быстрая стилизация интерфейсов без лишнего CSS.",
 	},
 	{
 		id: 3,
 		type: "language",
 		title: "TypeScript",
 		detail: "Language",
-		detailDescription: "Типы, контракты данных и спокойный рефакторинг.",
+		detailDescription: "Типы, дженерики — ожидаемое поведение программы.",
 	},
 	{
 		id: 4,
@@ -83,14 +83,14 @@ const stackList = [
 		type: "logging",
 		title: "Pino",
 		detail: "Fast logger",
-		detailDescription: "Быстрые логи без потери контекста сервиса.",
+		detailDescription: "Структурированные логи с контекстом - быстро и без потери контекста.",
 	},
 	{
 		id: 12,
 		type: "containerization",
 		title: "Docker",
 		detail: "Tool",
-		detailDescription: "Предсказуемый запуск проекта в контейнерах.",
+		detailDescription: "Изолированное окружение, предсказуемый запуск — контейнеризация.",
 	},
 ]
 
