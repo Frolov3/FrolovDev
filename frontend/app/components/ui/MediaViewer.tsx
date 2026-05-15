@@ -1,6 +1,6 @@
 "use client"
-
-import { useCallback, useEffect, useState } from "react"
+import { useEffect } from "react"
+import ClientPortal from "./ClientPortal"
 
 type MediaItem = {
 	type?: "image" | "video"
@@ -24,25 +24,29 @@ const MediaViewer = ({
 	startIndex = 0,
 }: MediaViewerProps) => {
 	useEffect(() => {
-		if (open) {
-			document.documentElement.classList.add("overflow-hidden")
-		} else {
-			document.documentElement.classList.remove("overflow-hidden")
+		if (!open) {
+			return
 		}
+
+		document.documentElement.classList.add("overflow-hidden")
+		document.body.classList.add("overflow-hidden")
 
 		return () => {
 			document.documentElement.classList.remove("overflow-hidden")
+			document.body.classList.remove("overflow-hidden")
 		}
 	}, [open])
 
-	if (!open) return null
+	if (!open || items.length === 0) return null
 
 	return (
-		<MediaViewerContent
-			items={items}
-			onClose={onClose}
-			startIndex={startIndex}
-		/>
+		<ClientPortal>
+			<MediaViewerContent
+				items={items}
+				onClose={onClose}
+				startIndex={startIndex}
+			/>
+		</ClientPortal>
 	)
 }
 
@@ -57,35 +61,14 @@ const MediaViewerContent = ({
 	onClose,
 	startIndex,
 }: MediaViewerContentProps) => {
-	const [activeIndex, setActiveIndex] = useState(startIndex)
-
 	const lastIndex = items.length - 1
-	const safeIndex = Math.min(Math.max(activeIndex, 0), Math.max(lastIndex, 0))
+	const safeIndex = Math.min(Math.max(startIndex, 0), Math.max(lastIndex, 0))
 	const current = items[safeIndex]
-	const hasManyItems = items.length > 1
-
-	const showPrevious = useCallback(() => {
-		setActiveIndex((index) => (index === 0 ? lastIndex : index - 1))
-	}, [lastIndex])
-
-	const showNext = useCallback(() => {
-		setActiveIndex((index) => (index === lastIndex ? 0 : index + 1))
-	}, [lastIndex])
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.key === "Escape") {
 				onClose()
-			}
-
-			if (!hasManyItems) return
-
-			if (event.key === "ArrowLeft") {
-				showPrevious()
-			}
-
-			if (event.key === "ArrowRight") {
-				showNext()
 			}
 		}
 
@@ -94,28 +77,32 @@ const MediaViewerContent = ({
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown)
 		}
-	}, [hasManyItems, onClose, showNext, showPrevious])
+	}, [onClose])
 
 	return (
 		<div
-			className="fixed inset-0 z-[999] flex items-center justify-center px-4 py-5 sm:px-8"
+			className="fixed inset-0 z-[999] flex h-dvh w-screen items-center justify-center overflow-hidden px-3 py-4 sm:px-8 sm:py-8"
 			role="dialog"
 			aria-modal="true"
+			aria-label="Просмотр фото"
 		>
-			<div className="absolute inset-0 bg-black/70" onClick={onClose} />
+			<div className="absolute inset-0 bg-black/85" onClick={onClose} />
 			<button
 				type="button"
 				onClick={onClose}
-				className="absolute z-20 top-5 right-5 bg-[var(--black)] border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] transition-colors duration-300 hover:border-[var(--white)] hover:bg-[var(--white)] hover:text-[var(--black)] focus:border-[var(--white)] focus:bg-[var(--white)] focus:text-[var(--black)] focus:outline-0 cursor-pointer"
+				className="absolute right-3 top-3 z-30 border border-[var(--white)] bg-[var(--black)] px-3 py-2 text-xs text-[var(--white)] transition-colors duration-300 hover:border-[var(--white)] hover:bg-[var(--white)] hover:text-[var(--black)] focus:border-[var(--white)] focus:bg-[var(--white)] focus:text-[var(--black)] focus:outline-0 sm:right-6 sm:top-6 cursor-pointer"
 			>
 				Закрыть
 			</button>
-			<div className="relative z-10 flex h-full w-full max-w-7xl items-center justify-center">
-				<img
-					src={current.url}
-					alt={current.alt}
-					className="max-h-full max-w-full object-contain"
-				/>
+
+			<div className="relative z-10 flex h-full min-h-0 w-full max-w-7xl items-center justify-center px-0 pt-12 sm:px-14 sm:py-12">
+				{current?.url ? (
+					<img
+						src={current.url}
+						alt={current.alt || current.name || "Фото"}
+						className="max-h-full max-w-full object-contain"
+					/>
+				) : null}
 			</div>
 		</div>
 	)

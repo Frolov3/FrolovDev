@@ -1,8 +1,7 @@
 "use client"
-
 import { useEffect, useRef, useState } from "react"
-
 import ArrowIcon from "../components/icons/ArrowIcon"
+import ClientPortal from "../components/ui/ClientPortal"
 import MediaViewer from "../components/ui/MediaViewer"
 
 type Option = {
@@ -146,7 +145,7 @@ function SwipeNotice({ message, onExited }: NoticeProps) {
 
 	return (
 		<div
-			className="fixed right-6 top-6 z-50 w-[min(24rem,calc(100vw-3rem))] cursor-grab active:cursor-grabbing rounded-lg border border-[var(--white)]/15 bg-[var(--white)] px-5 py-4 text-[var(--black)] shadow-[0_20px_80px_rgba(0,0,0,0.2)] transition-[transform,opacity] duration-300 ease-out"
+			className="fixed left-3 right-3 top-3 z-[1000] cursor-grab active:cursor-grabbing rounded-lg border border-[var(--white)]/15 bg-[var(--white)] px-5 py-4 text-[var(--black)] shadow-[0_20px_80px_rgba(0,0,0,0.2)] transition-[transform,opacity] duration-300 ease-out sm:left-auto sm:right-6 sm:top-6 sm:w-[min(24rem,calc(100vw-3rem))]"
 			onPointerDown={handlePointerDown}
 			onPointerMove={handlePointerMove}
 			onPointerUp={handlePointerUp}
@@ -371,10 +370,13 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 	return (
 		<>
 			{noticeMessage ? (
-				<SwipeNotice
-					message={noticeMessage}
-					onExited={() => setNoticeMessage(null)}
-				/>
+				<ClientPortal>
+					<SwipeNotice
+						key={noticeMessage}
+						message={noticeMessage}
+						onExited={() => setNoticeMessage(null)}
+					/>
+				</ClientPortal>
 			) : null}
 			<form
 				ref={formRef}
