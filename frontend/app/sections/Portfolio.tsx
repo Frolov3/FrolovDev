@@ -26,7 +26,7 @@ const workList = [
 
 export default function Portfolio() {
 	return (
-		<div className="min-h-screen bg-[var(--white)] px-6 sm:px-10 lg:px-24 py-8 flex flex-col">
+		<div className="min-h-screen bg-[var(--white)] px-6 sm:px-10 lg:px-24 py-8 flex flex-col selection:bg-[var(--black)]/40">
 			<div className="flex justify-between">
 				<SectionTitle>Portfolio</SectionTitle>
 				<NumberSection>03</NumberSection>

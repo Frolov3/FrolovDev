@@ -96,7 +96,7 @@ const stackList = [
 
 export default function MyStack() {
 	return (
-		<div className="min-h-screen bg-[var(--black)] px-6 sm:px-10 lg:px-24 pt-8 pb-8 flex flex-col">
+		<div className="min-h-screen bg-[var(--black)] px-6 sm:px-10 lg:px-24 pt-8 pb-8 flex flex-col selection:bg-[var(--white)]/40">
 			<div className="flex justify-between">
 				<SectionTitle style="white">My stack</SectionTitle>
 				<NumberSection style="white">02</NumberSection>

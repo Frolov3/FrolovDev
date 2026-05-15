@@ -29,7 +29,7 @@ const skills = [
 
 export default function WhatIBuild() {
 	return (
-		<div className="min-h-screen bg-[var(--white)] px-6 py-8 sm:px-10 lg:px-24 flex flex-col">
+		<div className="min-h-screen bg-[var(--white)] px-6 py-8 sm:px-10 lg:px-24 flex flex-col selection:bg-[var(--black)]/40">
 			<div className="flex justify-between">
 				<SectionTitle>What i build</SectionTitle>
 				<NumberSection>01</NumberSection>
