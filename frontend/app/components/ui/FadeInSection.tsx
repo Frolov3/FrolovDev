@@ -14,6 +14,11 @@ function FadeInSection({
 	const [isVisible, setIsVisible] = useState(false)
 
 	useEffect(() => {
+		if (!("IntersectionObserver" in window)) {
+			setIsVisible(true)
+			return
+		}
+
 		const observer = new IntersectionObserver(
 			([entry]) => {
 				if (entry.isIntersecting) {
@@ -21,7 +26,10 @@ function FadeInSection({
 					observer.disconnect()
 				}
 			},
-			{ threshold: 0.2 },
+			{
+				rootMargin: "0px",
+				threshold: 0.01,
+			},
 		)
 
 		if (ref.current) observer.observe(ref.current)

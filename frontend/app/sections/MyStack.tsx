@@ -9,16 +9,14 @@ const stackList = [
 		type: "frontend",
 		title: "React",
 		detail: "Library",
-		detailDescription:
-			"Компоненты, хуки и понятная структура.",
+		detailDescription: "Компоненты, хуки и понятная структура.",
 	},
 	{
 		id: 2,
 		type: "styles",
 		title: "Tailwind",
 		detail: "Framework",
-		detailDescription:
-			"Быстрая стилизация интерфейсов без лишнего CSS.",
+		detailDescription: "Быстрая стилизация интерфейсов без лишнего CSS.",
 	},
 	{
 		id: 3,
@@ -67,7 +65,7 @@ const stackList = [
 	{
 		id: 9,
 		type: "telegram",
-		title: "grammY",
+		title: "GrammY",
 		detail: "Framework",
 		detailDescription: "Команды, меню и сценарии для Telegram-ботов.",
 	},
@@ -83,14 +81,16 @@ const stackList = [
 		type: "logging",
 		title: "Pino",
 		detail: "Fast logger",
-		detailDescription: "Структурированные логи с контекстом - быстро и без потери контекста.",
+		detailDescription:
+			"Структурированные логи с контекстом - быстро и без потери контекста.",
 	},
 	{
 		id: 12,
 		type: "containerization",
 		title: "Docker",
 		detail: "Tool",
-		detailDescription: "Изолированное окружение, предсказуемый запуск — контейнеризация.",
+		detailDescription:
+			"Изолированное окружение, предсказуемый запуск — контейнеризация.",
 	},
 ]
 

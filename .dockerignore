@@ -1,0 +1,12 @@
+.git
+.DS_Store
+.env
+**/.env
+node_modules
+**/node_modules
+**/.next
+**/dist
+**/logs/*
+!**/logs/.gitkeep
+docker/mysql/data
+npm-debug.log*
