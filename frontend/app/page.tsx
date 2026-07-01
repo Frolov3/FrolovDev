@@ -1,9 +1,10 @@
 import "./globals.css"
 import Hero from "./sections/Hero"
-import GitHubIcon from "./components/icons/GitHubIcon"
 import type socialNetwork from "./types/socialNetwork"
 import TelegramIcon from "./components/icons/TelegramIcon"
 import LolzIcon from "./components/icons/LolzIcon"
+import KworkIcon from "./components/icons/KworkIcon"
+import GitHubIcon from "./components/icons/GitHubIcon"
 import WhatIBuild from "./sections/WhatIBuild"
 import MyStack from "./sections/MyStack"
 import Portfolio from "./sections/Portfolio"
@@ -25,6 +26,12 @@ const socialNetworks: socialNetwork[] = [
 	},
 	{
 		id: 3,
+		title: "Kwork",
+		link: "https://kwork.ru/user/frolov33",
+		icon: <KworkIcon className="cursor-pointer" />,
+	},
+	{
+		id: 4,
 		title: "Lolz",
 		link: "https://lolz.live/members/1018972/",
 		icon: <LolzIcon className="cursor-pointer" />,
