@@ -11,7 +11,7 @@ export default function SectionTitle({
 }: SectionTitleProps) {
 	return (
 		<h2
-			className={`text-4 uppercase ${style === "black" ? "text-[var(--black)]" : "text-[var(--white)]"}`}
+			className={`text-4 2xl:text-lg uppercase ${style === "black" ? "text-[var(--black)]" : "text-[var(--white)]"}`}
 		>
 			{children}
 		</h2>

@@ -17,10 +17,10 @@ export default function SkillCard({ skill }: SkillCardProps) {
 				/>
 			</div>
 			<div className="mt-5 w-3/12 h-0.5 bg-[var(--black)]"></div>
-			<div className="mt-2 font-semibold text-base text-[var(--black)]">
+			<div className="mt-2 font-semibold text-base text-[var(--black)] text-base 2xl:text-2xl ">
 				{skill.title}
 			</div>
-			<p className="mt-1.5 text-sm md:text-base text-[var(--black)] text-left md:text-justify">
+			<p className="mt-1.5 text-sm md:text-base 2xl:text-xl text-[var(--black)] text-left md:text-justify">
 				{skill.description}
 			</p>
 		</div>

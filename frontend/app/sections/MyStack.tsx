@@ -101,7 +101,7 @@ export default function MyStack() {
 				<SectionTitle style="white">My stack</SectionTitle>
 				<NumberSection style="white">02</NumberSection>
 			</div>
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-20 gap-y-9 mt-16 lg:mt-20">
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-20 gap-y-9 mt-16 lg:mt-20 2xl:mt-48">
 				{stackList.map((stack) => (
 					<FadeInSection key={stack.id}>
 						<StackCard stack={stack} key={stack.id} />

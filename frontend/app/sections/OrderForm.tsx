@@ -52,7 +52,7 @@ function hasFieldErrors(errors: FieldErrors) {
 
 function RequiredBadge() {
 	return (
-		<span className="text-xs font-medium text-[var(--white)]/55">
+		<span className="text-xs 2xl:text-lg font-medium text-[var(--white)]/55">
 			*
 		</span>
 	)
@@ -158,7 +158,9 @@ function SwipeNotice({ message, onExited }: NoticeProps) {
 		>
 			<div className="flex items-start justify-between gap-4">
 				<div>
-					<div className="mt-2 text-sm leading-6">{message}</div>
+					<div className="mt-2 text-sm 2xl:text-lg leading-6">
+						{message}
+					</div>
 				</div>
 				<button
 					type="button"
@@ -167,7 +169,7 @@ function SwipeNotice({ message, onExited }: NoticeProps) {
 						e.stopPropagation()
 						closeNotice()
 					}}
-					className="text-xl leading-none opacity-50 cursor-pointer transition-opacity duration-300 hover:opacity-100"
+					className="text-xl 2xl:text-2xl leading-none opacity-50 cursor-pointer transition-opacity duration-300 hover:opacity-100"
 					aria-label="Закрыть уведомление"
 				>
 					×
@@ -246,10 +248,7 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 			}
 		})
 
-		setAttachedFiles((currentFiles) => [
-			...currentFiles,
-			...nextFiles,
-		])
+		setAttachedFiles((currentFiles) => [...currentFiles, ...nextFiles])
 
 		if (fileInputRef.current) {
 			fileInputRef.current.value = ""
@@ -315,7 +314,9 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 		setFieldErrors(nextErrors)
 
 		if (hasFieldErrors(nextErrors)) {
-			setNoticeMessage("Заполните обязательные поля перед отправкой заявки.")
+			setNoticeMessage(
+				"Заполните обязательные поля перед отправкой заявки.",
+			)
 			return
 		}
 
@@ -359,7 +360,7 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 		}
 	}
 
-	const optionClassName = `border border-[var(--white)] px-2.5 py-1 text-xs text-[var(--white)] 
+	const optionClassName = `border border-[var(--white)] px-2.5 py-1 text-xs 2xl:text-[1rem] text-[var(--white)] 
 	peer-checked:bg-[var(--white)] peer-checked:text-[var(--black)] 
 	peer-checked:hover:text-[var(--black)] peer-checked:hover:bg-[var(--white)]/50 peer-checked:hover:border-[var(--white)]/50 
 	peer-checked:focus-visible:text-[var(--black)] peer-checked:focus-visible:bg-[var(--white)]/50 peer-checked:focus-visible:border-[var(--white)]/50 
@@ -383,12 +384,14 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 				onSubmit={formHandler}
 				noValidate
 				method="POST"
-				className="grid w-full flex-1 min-h-0 auto-rows-min content-start items-start grid-cols-1 gap-6 mt-6 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,0.8fr)] lg:gap-x-10 lg:gap-y-3 lg:mt-6"
+				className="grid w-full flex-1 min-h-0 auto-rows-min content-start items-start grid-cols-1 gap-6 mt-6 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,0.8fr)] lg:gap-x-10 lg:gap-y-3 lg:mt-6 2xl:mt-24"
 			>
 				<div className="flex min-h-0 flex-col lg:self-stretch">
 					<div>
 						<div className="mb-2 flex flex-wrap items-baseline gap-1 text-[var(--white)]">
-							<div className="text-base">Тип проекта</div>
+							<div className="text-base 2xl:text-xl">
+								Тип проекта
+							</div>
 							<RequiredBadge />
 							<FieldError
 								id="type-error"
@@ -446,7 +449,7 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 												{option.title}
 											</div>
 										</label>
-									)
+									),
 								)}
 						</div>
 					</div>
@@ -455,7 +458,9 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 							htmlFor="order-contacts"
 							className="mb-2 flex flex-wrap items-baseline gap-1 text-[var(--white)]"
 						>
-							<span className="text-base">Контакты</span>
+							<span className="text-base 2xl:text-xl">
+								Контакты
+							</span>
 							<RequiredBadge />
 							<FieldError
 								id="contacts-error"
@@ -476,7 +481,7 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 									: undefined
 							}
 							onChange={() => clearFieldError("contacts")}
-							className="w-full border-b border-[var(--white)] text-[var(--white)] placeholder:text-[var(--white)] placeholder:text-base outline-none focus:border-[var(--white)]/50 pb-1.5 duration-300"
+							className="w-full border-b border-[var(--white)] text-[var(--white)] placeholder:text-[var(--white)] placeholder:text-base 2xl:text-lg outline-none focus:border-[var(--white)]/50 pb-1.5 duration-300"
 						/>
 					</div>
 					<div className="mt-6 lg:mt-12">
@@ -484,7 +489,9 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 							htmlFor="order-task"
 							className="mb-2 flex flex-wrap items-baseline gap-1 text-[var(--white)]"
 						>
-							<span className="text-base">Задача</span>
+							<span className="text-base 2xl:text-xl">
+								Задача
+							</span>
 							<RequiredBadge />
 							<FieldError
 								id="task-error"
@@ -502,12 +509,12 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 								fieldErrors.task ? "task-error" : undefined
 							}
 							onChange={() => clearFieldError("task")}
-							className="w-full border-b border-[var(--white)] h-20 resize-none text-[var(--white)] placeholder:text-[var(--white)] placeholder:text-base pb-1.5 outline-none focus:border-[var(--white)]/50 duration-300"
+							className="w-full border-b border-[var(--white)] h-20 resize-none text-[var(--white)] placeholder:text-[var(--white)] placeholder:text-base 2xl:text-lg pb-1.5 outline-none focus:border-[var(--white)]/50 duration-300"
 						></textarea>
 					</div>
 					<div className="mt-6 lg:mt-12">
 						<div className="mb-2 flex flex-wrap items-baseline gap-1 text-[var(--white)]">
-							<div className="text-base">Бюджет</div>
+							<div className="text-base 2xl:text-xl">Бюджет</div>
 							<RequiredBadge />
 							<FieldError
 								id="budget-error"
@@ -521,9 +528,7 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 							aria-required="true"
 							aria-invalid={Boolean(fieldErrors.budget)}
 							aria-describedby={
-								fieldErrors.budget
-									? "budget-error"
-									: undefined
+								fieldErrors.budget ? "budget-error" : undefined
 							}
 						>
 							{budgets
@@ -567,13 +572,15 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 												{option.title}
 											</div>
 										</label>
-									)
+									),
 								)}
 						</div>
 					</div>
 					<div className="mt-6 lg:mt-12">
 						<div className="mb-2 flex flex-wrap items-baseline gap-1 text-[var(--white)]">
-							<div className="text-base">Срочность</div>
+							<div className="text-base 2xl:text-xl">
+								Срочность
+							</div>
 							<RequiredBadge />
 							<FieldError
 								id="deadlines-error"
@@ -610,9 +617,7 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 												name="deadlines"
 												value={option.id}
 												onChange={() =>
-													clearFieldError(
-														"deadlines",
-													)
+													clearFieldError("deadlines")
 												}
 												className="hidden peer"
 											/>
@@ -635,7 +640,7 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 												{option.title}
 											</div>
 										</label>
-									)
+									),
 								)}
 						</div>
 					</div>
@@ -663,7 +668,7 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 								className="hidden"
 								onChange={(e) => addFiles(e.target.files)}
 							/>
-							<span className="text-base font-semibold">
+							<span className="text-base 2xl:text-lg font-semibold">
 								Прикрепить ТЗ, макеты, фото или скрины
 							</span>
 							<span className="mt-3 text-sm leading-6 text-[var(--white)]/60">
@@ -697,7 +702,8 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 													}}
 												/>
 											) : (
-												file.name.split(".").pop() || "file"
+												file.name.split(".").pop() ||
+												"file"
 											)}
 										</div>
 										<div className="min-w-0">
@@ -752,8 +758,10 @@ export default function OrderForm({ budgets, projectTypes, deadlines }: Props) {
 						disabled={isSubmitting}
 						className="h-fit self-end bg-[var(--white)] border-2 border-[var(--white)] items-center justify-center gap-3 p-3 w-full sm:w-fit sm:min-w-64 cursor-pointer group outline-none focus:bg-transparent hover:bg-transparent disabled:opacity-60 disabled:cursor-wait duration-300 mt-6 flex"
 					>
-						<div className="text-[var(--black)] font-semi text-base group-hover:text-[var(--white)] group-focus:text-[var(--white)] duration-300">
-							{isSubmitting ? "Отправляем..." : "Отправить заявку"}
+						<div className="text-[var(--black)] font-semi text-base 2xl:text-lg group-hover:text-[var(--white)] group-focus:text-[var(--white)] duration-300">
+							{isSubmitting
+								? "Отправляем..."
+								: "Отправить заявку"}
 						</div>
 						<ArrowIcon className="text-[var(--black)] size-6 group-hover:text-[var(--white)] group-focus:text-[var(--white)] group-hover:-rotate-45 group-focus:-rotate-45 duration-300" />
 					</button>

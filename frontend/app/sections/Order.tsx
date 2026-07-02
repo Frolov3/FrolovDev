@@ -76,7 +76,7 @@ export default async function Order() {
 				<NumberSection style="white">04</NumberSection>
 			</div>
 			<FadeInSection>
-				<div className="text-xl sm:text-2xl font-semibold text-[var(--white)]">
+				<div className="text-xl sm:text-2xl 2xl:text-3xl font-semibold text-[var(--white)]">
 					Оформить заказ
 				</div>
 				<OrderForm

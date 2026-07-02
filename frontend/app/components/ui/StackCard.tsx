@@ -12,7 +12,7 @@ export default function StackCard({ stack }: StackCardProps) {
 
 	return (
 		<div
-			className="group h-36 cursor-pointer outline-none perspective-[900px]"
+			className="group h-36 2xl:h-48 cursor-pointer outline-none perspective-[900px]"
 			onClick={() => setIsFlipped(!isFlipped)}
 			onKeyDown={(event) => {
 				if (event.key === "Enter" || event.key === " ") {
@@ -29,14 +29,14 @@ export default function StackCard({ stack }: StackCardProps) {
 				}`}
 			>
 				<div className="absolute inset-0 flex flex-col justify-between border-2 border-[#151515] bg-[var(--black)] px-4 py-2.5 transition-colors duration-300 backface-hidden group-hover:border-[#2c2c2c] group-hover:bg-[#151515] group-focus-visible:border-[#E8E8E8]">
-					<div className="text-sm text-[#3d3d3d] font-bold uppercase">
+					<div className="text-sm 2xl:text-lg text-[#3d3d3d] font-bold uppercase">
 						{stack.type}
 					</div>
 					<div>
-						<div className="text-3xl text-[var(--white)] font-bold">
+						<div className="text-3xl 2xl:text-4xl text-[var(--white)] font-bold">
 							{stack.title}
 						</div>
-						<div className="text-sm text-[#E8E8E8] font-bold">
+						<div className="text-sm 2xl:text-lg text-[#E8E8E8] font-bold">
 							{stack.detail}
 						</div>
 					</div>
@@ -44,10 +44,10 @@ export default function StackCard({ stack }: StackCardProps) {
 
 				<div className="absolute inset-0 border-2 border-[#151515] bg-[var(--black)] px-4 py-3 backface-hidden transform-[rotateY(180deg)] duration-300 group-hover:border-[#2c2c2c] group-hover:bg-[#151515] group-focus-visible:border-[#E8E8E8]">
 					<div className="relative flex h-full flex-col justify-between">
-						<div className="text-sm font-bold uppercase text-[#3d3d3d]">
+						<div className="text-sm 2xl:text-lg font-bold uppercase text-[#3d3d3d]">
 							{stack.title}
 						</div>
-						<div className="text-sm leading-relaxed text-[#E8E8E8] font-semibold">
+						<div className="text-sm 2xl:text-lg leading-relaxed text-[#E8E8E8] font-semibold">
 							{stack.detailDescription}
 						</div>
 					</div>
