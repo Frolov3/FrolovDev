@@ -8,6 +8,7 @@ import {
 	animate,
 } from "framer-motion"
 import { sendLetterLog } from "@/app/lib/letterLog"
+import type { LetterButton } from "@/app/types/letter"
 import { ChevronLeftIcon, ChevronRightIcon } from "./icons/ChevronIcon"
 import FeatherIcon from "./icons/FeatherIcon"
 
@@ -16,6 +17,7 @@ type LetterPage = string[]
 interface EnvelopeLetterProps {
 	pages?: LetterPage[]
 	title?: string
+	buttons?: LetterButton[]
 }
 
 const SCENE_W = 300
@@ -111,17 +113,23 @@ function paginateLetterPages(pages: LetterPage[]) {
 export default function EnvelopeLetter({
 	pages = [],
 	title,
+	buttons = [],
 }: EnvelopeLetterProps) {
 	const [opened, setOpened] = useState(false)
 	const [page, setPage] = useState(0)
 	const [pageTransitioning, setPageTransitioning] = useState(false)
 	const [letterInFront, setLetterInFront] = useState(false)
+	const [selectedButtonId, setSelectedButtonId] = useState<number | null>(
+		null,
+	)
 	const prefersReducedMotion = useReducedMotion()
 
 	const paginatedPages = useMemo(() => paginateLetterPages(pages), [pages])
 	const totalPages = paginatedPages.length
 	const activePage = Math.min(page, totalPages - 1)
 	const currentPage = paginatedPages[activePage] ?? []
+	const isLastPage = activePage === totalPages - 1
+	const hasButtons = buttons.length > 0
 
 	const progress = useMotionValue(0)
 	const flapRotate = useMotionValue(0)
@@ -139,6 +147,20 @@ export default function EnvelopeLetter({
 	const shadowBlur = useTransform(progress, [0, 1], [4, 18])
 
 	const revealTriggered = useRef(false)
+	const pageViewLogged = useRef(false)
+
+	useEffect(() => {
+		if (pageViewLogged.current) return
+		pageViewLogged.current = true
+
+		sendLetterLog({
+			action: "Переход на страницу письма",
+			url: window.location.href,
+			title,
+			page: activePage + 1,
+			totalPages,
+		})
+	}, [activePage, title, totalPages])
 
 	useEffect(() => {
 		const dur = prefersReducedMotion ? 0 : undefined
@@ -226,6 +248,20 @@ export default function EnvelopeLetter({
 			setPage(next)
 			setPageTransitioning(false)
 		}, 160)
+	}
+
+	function chooseButton(button: LetterButton) {
+		if (selectedButtonId !== null) return
+
+		setSelectedButtonId(button.id)
+		sendLetterLog({
+			action: `Выбрана кнопка: ${button.text}`,
+			url: window.location.href,
+			title,
+			page: activePage + 1,
+			totalPages,
+			buttonText: button.text,
+		})
 	}
 
 	return (
@@ -331,6 +367,43 @@ export default function EnvelopeLetter({
 									{paragraph}
 								</p>
 							))}
+
+							{isLastPage && hasButtons && (
+								<div className="mt-4 text-left">
+									<div className="flex flex-row flex-wrap gap-2">
+										{buttons.map((button) => {
+											const isSelected =
+												button.id === selectedButtonId
+											const isMuted =
+												selectedButtonId !== null &&
+												!isSelected
+
+											return (
+												<button
+													key={button.id}
+													type="button"
+													onClick={() =>
+														chooseButton(button)
+													}
+													disabled={
+														selectedButtonId !==
+														null
+													}
+													className={`min-w-0 flex-1 rounded-md border px-3 py-1.5 text-center text-[15px] leading-tight transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8f2320] ${
+														isSelected
+															? "border-[#8f2320] bg-[#8f2320] text-[#fff8e9]"
+															: isMuted
+																? "border-[#d8cba8] bg-[#efe4c9] text-[#9f9074] opacity-55"
+																: "cursor-pointer border-[#c7a15f] bg-[#f2dfb7] text-[#7a211d] hover:bg-[#ead19c]"
+													}`}
+												>
+													{button.text}
+												</button>
+											)
+										})}
+									</div>
+								</div>
+							)}
 						</div>
 
 						{totalPages > 1 && (
@@ -346,7 +419,7 @@ export default function EnvelopeLetter({
 								</button>
 
 								<div className="flex items-center gap-1.5">
-									{pages.map((_, i) => (
+									{paginatedPages.map((_, i) => (
 										<button
 											key={i}
 											type="button"

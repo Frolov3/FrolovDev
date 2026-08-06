@@ -5,6 +5,7 @@ type LetterLogPayload = {
 	page?: number
 	totalPages?: number
 	content?: string
+	buttonText?: string
 }
 
 export function sendLetterLog(payload: LetterLogPayload) {

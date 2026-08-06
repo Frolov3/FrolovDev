@@ -8,6 +8,7 @@ class LetterService {
 			include: {
 				messages: true,
 				music: true,
+				buttons: true,
 			},
 		})
 

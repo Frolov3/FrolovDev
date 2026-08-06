@@ -4,6 +4,7 @@ export type Letter = {
 	password: string | null
 	messages: Message[]
 	music: Music[]
+	buttons: LetterButton[]
 }
 
 type Message = {
@@ -17,6 +18,13 @@ export type Music = {
 	id: number
 	title: string
 	path: string
+	order: number
+	letterId: number
+}
+
+export type LetterButton = {
+	id: number
+	text: string
 	order: number
 	letterId: number
 }

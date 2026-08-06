@@ -54,6 +54,7 @@ model Letter {
   password String?
   messages Message[]
   music Music[]
+  buttons LetterButton[]
 }
 
 model Message {
@@ -70,5 +71,13 @@ model Music {
   path String
   order Int
   letterId  Int
+  letter Letter @relation(fields: [letterId], references: [id], onDelete: Cascade)
+}
+
+model LetterButton {
+  id Int @id @default(autoincrement())
+  text String
+  order Int
+  letterId Int
   letter Letter @relation(fields: [letterId], references: [id], onDelete: Cascade)
 }

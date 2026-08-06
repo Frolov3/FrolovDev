@@ -41,10 +41,11 @@ export default async function LetterPage({
 	const pages = letter.messages
 		.sort((a, b) => a.order - b.order)
 		.map((message) => message.text.split("\n").filter(Boolean))
+	const buttons = letter.buttons.sort((a, b) => a.order - b.order)
 
 	return (
 		<div className="flex min-h-screen flex-col items-center justify-center pb-28">
-			<EnvelopeLetter pages={pages} title={title} />
+			<EnvelopeLetter pages={pages} title={title} buttons={buttons} />
 			<AudioPlayer musics={letter.music} />
 		</div>
 	)

@@ -10,6 +10,7 @@ type LetterLogBody = {
 	page?: unknown
 	totalPages?: unknown
 	content?: unknown
+	buttonText?: unknown
 	userAgent?: unknown
 	ip?: unknown
 }
@@ -71,8 +72,16 @@ class LetterController {
 
 	async log(req: Request, res: Response) {
 		try {
-			const { action, url, title, page, totalPages, content, userAgent } =
-				req.body as LetterLogBody
+			const {
+				action,
+				url,
+				title,
+				page,
+				totalPages,
+				content,
+				buttonText,
+				userAgent,
+			} = req.body as LetterLogBody
 
 			const logAction = asOptionalString(action)
 			const logUrl = asOptionalString(url)
@@ -88,6 +97,7 @@ class LetterController {
 			const logPage = asOptionalPositiveInteger(page)
 			const logTotalPages = asOptionalPositiveInteger(totalPages)
 			const logContent = asOptionalString(content)
+			const logButtonText = asOptionalString(buttonText)
 			const logUserAgent =
 				asOptionalString(userAgent) || req.get("user-agent") || null
 			const logIp = getRequestIp(req)
@@ -99,6 +109,9 @@ class LetterController {
 				? `\n<b>User-Agent:</b> ${escapeHtml(logUserAgent)}`
 				: ""
 			const ipText = logIp ? `\n<b>IP:</b> ${escapeHtml(logIp)}` : ""
+			const clickedButtonText = logButtonText
+				? `\n<b>Кнопка:</b> ${escapeHtml(logButtonText)}`
+				: ""
 			const contentText = logContent
 				? `\n<b>Текст страницы:</b>\n${escapeHtml(logContent).slice(0, 2500)}`
 				: ""
@@ -106,7 +119,7 @@ class LetterController {
 			await sendTelegramLog(
 				`<b>Лог письма</b>\n<b>Действие:</b> ${escapeHtml(logAction)}\n<b>URL:</b> ${escapeHtml(logUrl)}${
 					logTitle ? `\n<b>Письмо:</b> ${escapeHtml(logTitle)}` : ""
-				}${pageText}${userText}${ipText}${contentText}`,
+				}${pageText}${clickedButtonText}${userText}${ipText}${contentText}`,
 			)
 
 			return res.json({ success: true })
