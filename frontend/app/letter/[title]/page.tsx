@@ -2,7 +2,7 @@ import { Letter } from "@/app/types/letter"
 import EnvelopeLetter from "./components/Letter"
 import AudioPlayer from "./components/AudioPlayer"
 import { getApiUrl } from "@/app/lib/api"
-import { notFound } from "next/navigation"
+import { redirect } from "next/navigation"
 
 async function fetchLetter({ title }: { title: string }): Promise<Letter> {
 	const res = await fetch(
@@ -13,7 +13,7 @@ async function fetchLetter({ title }: { title: string }): Promise<Letter> {
 	)
 
 	if (res.status === 404) {
-		notFound()
+		redirect("/")
 	}
 
 	if (!res.ok) {
@@ -23,7 +23,7 @@ async function fetchLetter({ title }: { title: string }): Promise<Letter> {
 	const data = await res.json()
 
 	if (!data.letter) {
-		notFound()
+		redirect("/")
 	}
 
 	return data.letter
@@ -42,6 +42,10 @@ export default async function LetterPage({
 		.sort((a, b) => a.order - b.order)
 		.map((message) => message.text.split("\n").filter(Boolean))
 	const buttons = letter.buttons.sort((a, b) => a.order - b.order)
+
+	if (pages.length === 0 || pages.every((page) => page.length === 0)) {
+		redirect("/")
+	}
 
 	return (
 		<div className="flex min-h-screen flex-col items-center justify-center pb-28">
