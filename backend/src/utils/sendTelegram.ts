@@ -33,11 +33,54 @@ async function telegramRequest(
 	return data
 }
 
-function escapeHtml(text: string) {
+export function escapeHtml(text: string) {
 	return text
 		.replace(/&/g, "&amp;")
 		.replace(/</g, "&lt;")
 		.replace(/>/g, "&gt;")
+}
+
+export async function sendTelegramLog(message: string) {
+	try {
+		const chatId = process.env.TELEGRAM_CHAT_ID
+		const botToken = process.env.TELEGRAM_BOT_TOKEN
+
+		if (!chatId || !botToken) {
+			logger.warn("Telegram env vars are missing")
+			return
+		}
+
+		const botUrl = `https://api.telegram.org/bot${botToken}`
+
+		await telegramRequest(
+			`${botUrl}/sendMessage`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					chat_id: chatId,
+					text: message.slice(0, 4096),
+					parse_mode: "HTML",
+					disable_web_page_preview: true,
+				}),
+			},
+			"Failed to send Telegram log",
+		)
+	} catch (error) {
+		const err = error instanceof Error ? error : new Error(String(error))
+
+		logger.error(
+			{
+				err: {
+					message: err.message,
+					stack: err.stack,
+				},
+			},
+			"Telegram log send failed",
+		)
+	}
 }
 
 async function sendTelegram(order: Order) {

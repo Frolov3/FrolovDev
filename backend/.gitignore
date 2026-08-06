@@ -28,3 +28,8 @@ npm-debug.log*
 /logs/*
 !/logs/
 !/logs/.gitkeep
+
+# Music
+/music/*
+!/music/
+!/music/.gitkeep

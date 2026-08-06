@@ -1,0 +1,39 @@
+services:
+    frontend:
+        build:
+            context: .
+            dockerfile: docker/frontend/Dockerfile
+            target: dev
+        environment:
+            API_URL: http://backend:3000
+            NEXT_TELEMETRY_DISABLED: 1
+            WATCHPACK_POLLING: "true"
+        volumes:
+            - ./frontend:/app
+            - frontend_node_modules:/app/node_modules
+            - frontend_next:/app/.next
+        ports:
+            - "3000:3000"
+        command: npm run dev -- --hostname 0.0.0.0
+
+    backend:
+        build:
+            context: .
+            dockerfile: docker/backend/Dockerfile
+            target: dev
+        environment:
+            PORT: 3000
+        volumes:
+            - ./backend:/app
+            - backend_node_modules:/app/node_modules
+            - ./backend/uploads:/app/uploads
+            - ./backend/logs:/app/logs
+            - ./backend/music:/app/music
+        ports:
+            - "3001:3000"
+        command: sh -c "npx prisma generate && npx prisma migrate deploy && npm run dev"
+
+volumes:
+    frontend_node_modules:
+    frontend_next:
+    backend_node_modules:

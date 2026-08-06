@@ -5,9 +5,13 @@ import cors from "cors"
 import { UnsupportedFileTypeError } from "./middleware/uploadFiles"
 import router from "./routes"
 import logger from "./utils/logger"
+import helmet from "helmet"
 
 const app = express()
+app.use(helmet())
+
 const uploadsPath = fileURLToPath(new URL("../uploads", import.meta.url))
+const musicPath = fileURLToPath(new URL("../music", import.meta.url))
 
 const allowedDomain = process.env.ALLOWED_DOMAIN
 app.use(
@@ -32,6 +36,7 @@ app.use((req, res, next) => {
 
 app.use(express.json())
 app.use("/uploads", express.static(uploadsPath))
+app.use("/music", express.static(musicPath))
 app.use("/api", router)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

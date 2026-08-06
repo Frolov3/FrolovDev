@@ -27,6 +27,10 @@ write_proxy_locations() {
 		proxy_pass http://backend;
 	}
 
+	location /music/ {
+		proxy_pass http://backend;
+	}
+
 	location /_next/static/ {
 		proxy_pass http://frontend;
 		add_header Cache-Control "public, max-age=31536000, immutable";

@@ -5,6 +5,19 @@ WORKDIR /app
 COPY frontend/package*.json ./
 RUN npm ci
 
+FROM node:22-bookworm-slim AS dev
+
+WORKDIR /app
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
+COPY frontend/package*.json ./
+RUN npm ci
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev", "--", "--hostname", "0.0.0.0"]
+
 FROM node:22-bookworm-slim AS builder
 
 WORKDIR /app

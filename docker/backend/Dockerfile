@@ -11,6 +11,18 @@ WORKDIR /app
 COPY backend/package*.json ./
 RUN npm ci
 
+FROM base AS dev
+
+WORKDIR /app
+ENV NODE_ENV=development
+
+COPY backend/package*.json ./
+RUN npm ci
+
+EXPOSE 3000
+
+CMD ["sh", "-c", "npx prisma generate && npm run dev"]
+
 FROM base AS builder
 
 WORKDIR /app

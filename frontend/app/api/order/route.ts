@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { getApiUrl } from "@/app/lib/api"
 
 const requiredFields = [
 	{ name: "projectTypeId", message: "Выберите тип проекта" },
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
 		)
 	}
 
-	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order`, {
+	const res = await fetch(`${getApiUrl()}/api/order`, {
 		method: "POST",
 		headers: isMultipart
 			? undefined

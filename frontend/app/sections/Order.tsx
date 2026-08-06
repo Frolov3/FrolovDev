@@ -2,6 +2,7 @@ import FadeInSection from "../components/ui/FadeInSection"
 import NumberSection from "../components/ui/NumberSection"
 import SectionTitle from "../components/ui/SectionTitle"
 import OrderForm from "./OrderForm"
+import { getApiUrl } from "../lib/api"
 
 type Option = {
 	id: number
@@ -37,7 +38,7 @@ const fallbackDeadlines: Option[] = [
 ]
 
 async function fetchJSON<T>(path: string): Promise<T> {
-	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
+	const res = await fetch(`${getApiUrl()}${path}`, {
 		cache: "no-store",
 	})
 

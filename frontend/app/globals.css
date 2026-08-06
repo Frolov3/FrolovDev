@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Manrope:wght@200..800&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -7,5 +8,56 @@
 }
 
 body {
+	background: var(--white);
+}
+
+.audio-player-range {
+	--range-progress: 0%;
+	appearance: none;
+	height: 14px;
+	cursor: pointer;
+	background: transparent;
+	accent-color: var(--white);
+}
+
+.audio-player-range::-webkit-slider-runnable-track {
+	height: 4px;
+	border-radius: 999px;
+	background: linear-gradient(
+		to right,
+		var(--white) 0%,
+		var(--white) var(--range-progress),
+		#6f6f6f var(--range-progress),
+		#6f6f6f 100%
+	);
+}
+
+.audio-player-range::-webkit-slider-thumb {
+	appearance: none;
+	width: 14px;
+	height: 14px;
+	margin-top: -5px;
+	border: 2px solid var(--black);
+	border-radius: 999px;
+	background: var(--white);
+}
+
+.audio-player-range::-moz-range-track {
+	height: 4px;
+	border-radius: 999px;
+	background: #6f6f6f;
+}
+
+.audio-player-range::-moz-range-progress {
+	height: 4px;
+	border-radius: 999px;
+	background: var(--white);
+}
+
+.audio-player-range::-moz-range-thumb {
+	width: 14px;
+	height: 14px;
+	border: 2px solid var(--black);
+	border-radius: 999px;
 	background: var(--white);
 }

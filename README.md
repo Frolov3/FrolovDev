@@ -35,3 +35,11 @@ The website will be available at the following address:
 ```text
 http://localhost
 ```
+
+For development with hot reload, run:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+```
+
+Frontend will also be available directly at `http://localhost:3000`, and the backend at `http://localhost:3001`.

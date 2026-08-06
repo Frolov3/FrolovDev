@@ -22,6 +22,8 @@ services:
         build:
             context: .
             dockerfile: docker/frontend/Dockerfile
+        environment:
+            API_URL: http://backend:3000
         env_file:
             - ./frontend/.env
         depends_on:
@@ -32,6 +34,8 @@ services:
         build:
             context: .
             dockerfile: docker/backend/Dockerfile
+        environment:
+            PORT: 3000
         env_file:
             - ./backend/.env
         depends_on:
@@ -40,6 +44,9 @@ services:
         volumes:
             - backend_uploads:/app/uploads
             - backend_logs:/app/logs
+            - ./backend/music:/app/music
+        ports:
+            - "3001:3000"
         restart: unless-stopped
 
     mysql:
